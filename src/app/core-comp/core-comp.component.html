@@ -1,0 +1,30 @@
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-3">
+            <button class="btn btn-outline-success" (click)="initChartData(52)">XRP</button>
+            <button class="btn btn-outline-success"  (click)="initChartData(74)">DOGE</button>
+            <button class="btn btn-outline-success"  (click)="initChartData(1027)">ETH</button>
+        </div>
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+</div>
+
+
+<ng-container>
+    <apx-chart
+      [series]="series"
+      [chart]="chart"
+      [dataLabels]="dataLabels"
+      [markers]="markers"
+      [title]="title"
+      [fill]="fill"
+      [yaxis]="yaxis"
+      [xaxis]="xaxis"
+      [tooltip]="tooltip"
+      [autoUpdateSeries]="true"
+    ></apx-chart>
+</ng-container>
