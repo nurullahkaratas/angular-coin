@@ -48,28 +48,28 @@ export class CoreCompComponent {
     this.initChartData(52);
   }
 
-public coins:any;
-public coinNames=[{name:"XRP",value:"XRP"},{name:"XRP",value:"XRP"}];
-public coinType:any
-public annotations:any;
-public trends:PointAnnotations[]=[];
-public trendText:any;
-public activeOptionButton = "all";
-public increamentList: any = [];
-public increamentFiboList: any = [];
-public increamentFiboMaxes: any = [];
-public coinData:any;
-public decreamentList: any = [];
-public decreamentFiboList: any = [];
-public decreamentFiboMines: any = [];
+  public coins: any;
+  public coinNames = [{ name: "XRP", value: "XRP" }, { name: "XRP", value: "XRP" }];
+  public coinType: any
+  public annotations: any;
+  public trends: PointAnnotations[] = [];
+  public trendText: any;
+  public activeOptionButton = "all";
+  public increamentList: any = [];
+  public increamentFiboList: any = [];
+  public increamentFiboMaxes: any = [];
+  public coinData: any;
+  public decreamentList: any = [];
+  public decreamentFiboList: any = [];
+  public decreamentFiboMines: any = [];
 
-public increamentTrendPoints: any[];
+  public increamentTrendPoints: any[];
   public updateOptionsData = {
     "5min": {
       xaxis: {
         type: "datetime",
-        min: new Date(Date.now()-10000000).getTime(),
-        max: new Date(Date.now()+10800000).getTime(),
+        min: new Date(Date.now() - 10000000).getTime(),
+        max: new Date(Date.now() + 10800000).getTime(),
         tickAmount: 10
       }
     },
@@ -77,24 +77,24 @@ public increamentTrendPoints: any[];
       xaxis: {
         type: "datetime",
         tickAmount: 10,
-        min: new Date(Date.now()-20000000).getTime(),
-        max: new Date(Date.now()+10800000).getTime()
+        min: new Date(Date.now() - 20000000).getTime(),
+        max: new Date(Date.now() + 10800000).getTime()
       }
     },
     "30min": {
       xaxis: {
         type: "datetime",
         tickAmount: 10,
-        min: new Date(Date.now()-30000000).getTime(),
-        max: new Date(Date.now()+10800000).getTime()
+        min: new Date(Date.now() - 30000000).getTime(),
+        max: new Date(Date.now() + 10800000).getTime()
       }
     },
     "60min": {
       xaxis: {
         type: "datetime",
         tickAmount: 10,
-        min: new Date(Date.now()-40000000).getTime(),
-        max: new Date(Date.now()+10800000).getTime()
+        min: new Date(Date.now() - 40000000).getTime(),
+        max: new Date(Date.now() + 10800000).getTime()
       }
     },
     all: {
@@ -108,23 +108,21 @@ public increamentTrendPoints: any[];
   };
 
   public initChartData(num): void {
+    this.trendText = '';
+    let labelName = "";
+    labelName = num == 52 ? "XRP" : num == 74 ? "DOGE" : num == 1027 ? "ETH" : "";
+    let dates = [];
+    let prices = [];
+    let trendPrices = [];
+    let trendDates = [];
+    this.http.get("https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id=" + num + "&range=1D").subscribe(result => {
 
-    console.log(Date.now())
-    let labelName="";
-    labelName= num == 52 ? "XRP" : num == 74 ? "DOGE" : num == 1027 ? "ETH" : "";
-    let dates =[];
-    let prices=[];
-    let trendPrices=[];
-    let trendDates=[];
-    this.http.get("https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id="+num+"&range=1D").subscribe(result=>{
-
-      console.log(result);
       this.coins = result;
       var keyNames = Object.keys(this.coins.data.points);
       var i = 1;
       keyNames.forEach(element => {
-          dates.push(Number(element)*1000+10800000);
-          prices.push(this.coins.data.points[element].v[0]);
+        dates.push(Number(element) * 1000 + 10800000);
+        prices.push(this.coins.data.points[element].v[0]);
       });
       this.coinData = { dateList: dates, priceList: prices };
 
@@ -162,7 +160,7 @@ public increamentTrendPoints: any[];
           type: "datetime",
           tickAmount: 6,
           min: new Date(dates[0]).getTime(),
-          max:new Date(Date.now()+10800000).getTime()
+          max: new Date(Date.now() + 10800000).getTime()
         },
         tooltip: {
           x: {
@@ -174,12 +172,10 @@ public increamentTrendPoints: any[];
   }
   updateOptions(option: any): void {
     this.activeOptionButton = option;
-    console.log(this.updateOptionsData[option].xaxis);
-    this.chartOptions.xaxis=this.updateOptionsData[option].xaxis;
+    this.chartOptions.xaxis = this.updateOptionsData[option].xaxis;
   }
 
   getTrendPoints(coinDates, coinValues) {
-    console.log('hakan', coinValues);
     let pointAnotations: PointAnnotations[] = [];
     let i = 0;
     for (let index = 0; index < coinValues.length; index++) {
@@ -207,20 +203,15 @@ public increamentTrendPoints: any[];
       this.annotations = { points: pointAnotations };
     }
 
-    console.log('nurullah', pointAnotations)
-
     return pointAnotations;
   }
 
   hesapla() {
-    console.log(this.coinData);
-
     var increamentValues = this.calculateIncreament();
     var decreamentValues = this.calculateDecreament();
 
     var priceValues = [];
     var dateValues = [];
-    console.log(increamentValues);
     increamentValues.forEach(element => {
       var dateItems = this.coinData.dateList[element.endIndex];
       var priceItems = this.coinData.priceList[element.endIndex];
@@ -228,7 +219,6 @@ public increamentTrendPoints: any[];
       dateValues.push(dateItems);
     });
 
-    console.log(decreamentValues);
     decreamentValues.forEach(element => {
       var dateItems = this.coinData.dateList[element.endIndex];
       var priceItems = this.coinData.priceList[element.endIndex];
@@ -258,7 +248,7 @@ public increamentTrendPoints: any[];
     this.increamentFiboList = this.checkFib(this.increamentList, this.increamentList.length, 1);
 
     var ignoredList = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 2; i++) {
       this.increamentFiboMaxes.push(this.findMax(this.increamentFiboList, ignoredList));
       this.increamentFiboMaxes.forEach(element => {
         ignoredList.push(element.value)
@@ -283,7 +273,7 @@ public increamentTrendPoints: any[];
     this.decreamentFiboList = this.checkFib(this.decreamentList, this.decreamentList.length, 1);
 
     var ignoredList = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 2; i++) {
       this.decreamentFiboMines.push(this.findMax(this.decreamentFiboList, ignoredList));
       this.decreamentFiboMines.forEach(element => {
         ignoredList.push(element.value)
