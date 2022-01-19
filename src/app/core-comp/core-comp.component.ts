@@ -207,7 +207,7 @@ export class CoreCompComponent {
     return pointAnotations;
   }
 
-  hesapla() {
+  calculate() {
     var increamentValues = this.calculateIncreament();
     var decreamentValues = this.calculateDecreament();
 
@@ -257,12 +257,7 @@ export class CoreCompComponent {
     }
 
     this.increamentFiboList = this.checkFib(this.increamentList, this.increamentList.length);
-
-    var ignoredList = [];
-    this.increamentFiboMaxes.push(this.findMax(this.increamentFiboList, ignoredList));
-    this.increamentFiboMaxes.forEach(element => {
-      ignoredList.push(element.value)
-    });
+    this.increamentFiboMaxes.push(this.findMax(this.increamentFiboList));
     return this.increamentFiboMaxes;
   }
 
@@ -280,12 +275,7 @@ export class CoreCompComponent {
     }
 
     this.decreamentFiboList = this.checkFib(this.decreamentList, this.decreamentList.length);
-
-    var ignoredList = [];
-    this.decreamentFiboMines.push(this.findMax(this.decreamentFiboList, ignoredList));
-    this.decreamentFiboMines.forEach(element => {
-      ignoredList.push(element.value)
-    });
+    this.decreamentFiboMines.push(this.findMax(this.decreamentFiboList));
     return this.decreamentFiboMines;
   }
 
@@ -306,10 +296,10 @@ export class CoreCompComponent {
     return list;
   }
 
-  findMax(list, ignoredList) {
+  findMax(list) {
     var buyuk = list[0];
     for (let i = 0; i < list.length; i++) {
-      if (buyuk.value < list[i].value && ignoredList.indexOf(list[i].value) == -1) {
+      if (buyuk.value < list[i].value) {
         buyuk = list[i];
       }
     }
