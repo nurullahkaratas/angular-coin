@@ -110,6 +110,7 @@ export class CoreCompComponent {
   public initChartData(num): void {
     this.trendText = '';
     let labelName = "";
+    this.annotations = null;
     labelName = num == 52 ? "XRP" : num == 74 ? "DOGE" : num == 1027 ? "ETH" : "";
     let dates = [];
     let prices = [];
