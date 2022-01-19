@@ -23,12 +23,24 @@
     <div class="chart-container">
       <div class="row">
         <div class="col">
-          <ng-container>
-            <apx-chart [series]="series" [chart]="chart" [dataLabels]="dataLabels" [markers]="markers" [title]="title"
-              [fill]="fill" [yaxis]="yaxis" [xaxis]="xaxis" [tooltip]="tooltip" [autoUpdateSeries]="true"></apx-chart>
-          </ng-container>
+            <div id="chart">
+                <apx-chart
+                  [series]="chartOptions.series"
+                  [chart]="chartOptions.chart"
+                  [xaxis]="chartOptions.xaxis"
+                  [dataLabels]="chartOptions.dataLabels"
+                  [grid]="chartOptions.grid"
+                  [stroke]="chartOptions.stroke"
+                  [title]="chartOptions.title"
+                  [labels]="chartOptions.labels"
+                  [annotations]="chartOptions.annotations"
+                ></apx-chart>
+              </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+
+

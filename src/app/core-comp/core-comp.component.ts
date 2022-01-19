@@ -1,17 +1,31 @@
 import { HttpClient } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
+
 import {
+  ChartComponent,
   ApexAxisChartSeries,
   ApexChart,
-  ApexTitleSubtitle,
-  ApexDataLabels,
-  ApexFill,
-  ApexMarkers,
-  ApexYAxis,
   ApexXAxis,
-  ApexTooltip
+  ApexDataLabels,
+  ApexTitleSubtitle,
+  ApexStroke,
+  ApexGrid,
+  ApexAnnotations,
+  PointAnnotations
 } from "ng-apexcharts";
-import { dataSeries } from "./data-series";
+
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  annotations: ApexAnnotations;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  dataLabels: ApexDataLabels;
+  grid: ApexGrid;
+  labels: string[];
+  stroke: ApexStroke;
+  title: ApexTitleSubtitle;
+};
 
 @Component({
   selector: 'app-core-comp',
@@ -19,15 +33,8 @@ import { dataSeries } from "./data-series";
   styleUrls: ['./core-comp.component.scss']
 })
 export class CoreCompComponent {
-  public series: ApexAxisChartSeries;
-  public chart: ApexChart;
-  public dataLabels: ApexDataLabels;
-  public markers: ApexMarkers;
-  public title: ApexTitleSubtitle;
-  public fill: ApexFill;
-  public yaxis: ApexYAxis;
-  public xaxis: ApexXAxis;
-  public tooltip: ApexTooltip;
+  @ViewChild("chart") chart: ChartComponent;
+  public chartOptions: Partial<ChartOptions>;
 
   constructor(private http:HttpClient) {
     this.initChartData(52);
@@ -40,7 +47,11 @@ public coinType:any
 
     let labelName="";
     labelName= num == 52 ? "XRP" : num == 74 ? "DOGE" : num == 1027 ? "ETH" : "";
-    let dates = [];
+    let dates =[];
+    let prices=[];
+    let trendPrices=[];
+    let trendDates=[];
+    let trends:PointAnnotations[]=[];
     this.http.get("https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id="+num+"&range=1D").subscribe(result=>{
       console.log(result);
       this.coins=result;
@@ -49,74 +60,80 @@ public coinType:any
       keyNames.forEach(element => {
         // console.log(this.coins.data.points[element].v[0]);
         if(i %5 == 0){
-          dates.push([Number(element), this.coins.data.points[element].v[0]]);
+          dates.push(Number(element));
+          prices.push(this.coins.data.points[element].v[0]);
         };
         i++;
       });
-      console.log(dates);
-    })
-    let ts2 = 1484418600000;
-   
+      trends=this.getTrendPoints(prices,dates);
 
-    this.series = [
-      {
-        name: "$ USD",
-        data: dates
-      }
-    ];
-    this.chart = {
-      type: "area",
-      stacked: false,
-      height: 500,
-      width:1000,
-      zoom: {
-        type: "x",
-        enabled: true,
-        autoScaleYaxis: true
-      },
-      toolbar: {
-        autoSelected: "zoom"
-      }
-    };
-    this.dataLabels = {
-      enabled: false
-    };
-    this.markers = {
-      size: 0
-    };
-    this.title = {
-      text: labelName,
-      align: "left"
-    };
-    this.fill = {
-      type: "gradient",
-      gradient: {
-        shadeIntensity: 1,
-        inverseColors: false,
-        opacityFrom: 0.5,
-        opacityTo: 0,
-        stops: [0, 90, 100]
-      }
-    };
-    this.yaxis = {
-      labels: {
-   
-      },
-      title: {
-        text: "Price"
-      }
-    };
-    this.xaxis = {
-      type: "datetime"
-    };
-    this.tooltip = {
-      shared: false,
-      y: {
-     
-      }
-    };
+      this.chartOptions = {
+        series: [
+          {
+            name: "series",
+            data: prices
+          }
+        ],
+        chart: {
+          height: 350,
+          type: "line"
+        },
+        annotations: {
+          points: trends
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          curve: "straight"
+        },
+        grid: {
+          padding: {
+            right: 30,
+            left: 20
+          }
+        },
+        title: {
+          text: "Line with Annotations",
+          align: "left"
+        },
+        labels: dates,
+        xaxis: {
+          type: "datetime"
+        }
+      };
+    })
   }
-  changeCoin(value){
-    this.coinType=value;
+
+  getTrendPoints(coinValues,coinDates){
+    let pointAnotations:PointAnnotations[]=[];
+    let i=0;
+    for (let index = 0; index < 5; index++) {
+      pointAnotations.push({
+        x:coinDates[index],
+        y:coinValues[index],
+        marker: {
+          size: 5,
+          fillColor: "#fff",
+          strokeColor: "red",
+          radius: 2,
+          cssClass: "apexcharts-custom-class"
+        },
+        label: {
+          borderColor: "#FF4560",
+          offsetY: 0,
+          style: {
+            color: "#fff",
+            background: "#FF4560"
+          },
+
+          text: "Trend Noktası"
+        }
+      });
+      
+    }
+    console.log(pointAnotations)
+
+    return pointAnotations;
   }
 }
