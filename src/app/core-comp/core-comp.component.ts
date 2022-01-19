@@ -256,7 +256,7 @@ export class CoreCompComponent {
       }
     }
 
-    this.increamentFiboList = this.checkFib(this.increamentList, this.increamentList.length, 1);
+    this.increamentFiboList = this.checkFib(this.increamentList, this.increamentList.length);
 
     var ignoredList = [];
     this.increamentFiboMaxes.push(this.findMax(this.increamentFiboList, ignoredList));
@@ -279,7 +279,7 @@ export class CoreCompComponent {
       }
     }
 
-    this.decreamentFiboList = this.checkFib(this.decreamentList, this.decreamentList.length, 1);
+    this.decreamentFiboList = this.checkFib(this.decreamentList, this.decreamentList.length);
 
     var ignoredList = [];
     this.decreamentFiboMines.push(this.findMax(this.decreamentFiboList, ignoredList));
@@ -294,7 +294,7 @@ export class CoreCompComponent {
     return (n * n == num);
   }
 
-  checkFib(array, length, flag) {
+  checkFib(array, length) {
     var list = [];
     var count = 0;
     for (let i = 0; i < length; i++) {
@@ -302,13 +302,6 @@ export class CoreCompComponent {
         list.push(array[i]);
         count++;
       }
-    }
-
-    if (flag == 1) {
-
-    }
-    else if (flag == 2) {
-
     }
     return list;
   }
