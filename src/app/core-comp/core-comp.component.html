@@ -23,28 +23,17 @@
     <div class="chart-container">
       <div class="row">
         <div class="col">
-            <div id="chart">
-                <apx-chart
-                  [series]="chartOptions.series"
-                  [chart]="chartOptions.chart"
-                  [xaxis]="chartOptions.xaxis"
-                  [dataLabels]="chartOptions.dataLabels"
-                  [grid]="chartOptions.grid"
-                  [stroke]="chartOptions.stroke"
-                  [title]="chartOptions.title"
-                  [labels]="chartOptions.labels"
-                  [annotations]="annotations"
-                ></apx-chart>
-              </div>
+          <div id="chart">
+            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+              [dataLabels]="chartOptions.dataLabels" [grid]="chartOptions.grid" [stroke]="chartOptions.stroke"
+              [title]="chartOptions.title" [labels]="chartOptions.labels" [annotations]="annotations"></apx-chart>
+          </div>
         </div>
       </div>
       <div class="col">
         <button class="button" (click)="hesapla()">Hesapla</button>
-<label >{{this.trendText}}</label>
+        <label>{{this.trendText}}</label>
       </div>
     </div>
   </div>
 </section>
-
-
-
