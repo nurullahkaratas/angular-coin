@@ -33,10 +33,14 @@
                   [stroke]="chartOptions.stroke"
                   [title]="chartOptions.title"
                   [labels]="chartOptions.labels"
-                  [annotations]="chartOptions.annotations"
+                  [annotations]="annotations"
                 ></apx-chart>
               </div>
         </div>
+      </div>
+      <div class="col">
+        <button class="button" (click)="hesapla()">Hesapla</button>
+<label >{{this.trendText}}</label>
       </div>
     </div>
   </div>

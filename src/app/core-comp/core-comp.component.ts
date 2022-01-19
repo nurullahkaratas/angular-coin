@@ -42,6 +42,9 @@ export class CoreCompComponent {
 public coins:any;
 public coinNames=[{name:"XRP",value:"XRP"},{name:"XRP",value:"XRP"}];
 public coinType:any
+public annotations:any;
+public trends:PointAnnotations[]=[];
+public trendText:any;
 
   public initChartData(num): void {
 
@@ -51,8 +54,7 @@ public coinType:any
     let prices=[];
     let trendPrices=[];
     let trendDates=[];
-    let trends:PointAnnotations[]=[];
-    this.http.get("https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id="+num+"&range=1D").subscribe(result=>{
+    this.http.get("https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id="+num+"&range=7D").subscribe(result=>{
       console.log(result);
       this.coins=result;
       var keyNames = Object.keys(this.coins.data.points);
@@ -60,12 +62,12 @@ public coinType:any
       keyNames.forEach(element => {
         // console.log(this.coins.data.points[element].v[0]);
         if(i %5 == 0){
-          dates.push(Number(element));
+          dates.push(Number(element)+607800);
           prices.push(this.coins.data.points[element].v[0]);
         };
         i++;
       });
-      trends=this.getTrendPoints(prices,dates);
+      this.trends=this.getTrendPoints(prices,dates);
 
       this.chartOptions = {
         series: [
@@ -79,7 +81,6 @@ public coinType:any
           type: "line"
         },
         annotations: {
-          points: trends
         },
         dataLabels: {
           enabled: false
@@ -94,12 +95,12 @@ public coinType:any
           }
         },
         title: {
-          text: "Line with Annotations",
+          text: labelName,
           align: "left"
         },
         labels: dates,
         xaxis: {
-          type: "datetime"
+          type: "datetime",
         }
       };
     })
@@ -136,4 +137,11 @@ public coinType:any
 
     return pointAnotations;
   }
+  hesapla(){
+    this.annotations={
+      points:this.trends
+    };
+    this.trendText="Trendler grafikte gösterilmiştir. Mevcut hesaplanan trende göre, öngörülen maksimum değer "+0.56666+", minumum değer ise "+0.45000+" olarak hesaplanmıştır."
+  }
 }
+
