@@ -11,7 +11,11 @@ import {
   ApexStroke,
   ApexGrid,
   ApexAnnotations,
-  PointAnnotations
+  PointAnnotations,
+  ApexFill,
+  ApexYAxis,
+  ApexTooltip,
+  ApexMarkers
 } from "ng-apexcharts";
 
 
@@ -25,6 +29,10 @@ export type ChartOptions = {
   labels: string[];
   stroke: ApexStroke;
   title: ApexTitleSubtitle;
+  fill: ApexFill;
+  yaxis: ApexYAxis;
+  tooltip: ApexTooltip;
+  markers: ApexMarkers;
 };
 
 @Component({
@@ -45,34 +53,75 @@ public coinType:any
 public annotations:any;
 public trends:PointAnnotations[]=[];
 public trendText:any;
+public activeOptionButton = "all";
+  public updateOptionsData = {
+    "5min": {
+      xaxis: {
+        type: "datetime",
+        min: new Date(Date.now()-10000000).getTime(),
+        max: new Date(Date.now()+10800000).getTime(),
+        tickAmount: 10
+      }
+    },
+    "15min": {
+      xaxis: {
+        type: "datetime",
+        tickAmount: 10,
+        min: new Date(Date.now()-20000000).getTime(),
+        max: new Date(Date.now()+10800000).getTime()
+      }
+    },
+    "30min": {
+      xaxis: {
+        type: "datetime",
+        tickAmount: 10,
+        min: new Date(Date.now()-30000000).getTime(),
+        max: new Date(Date.now()+10800000).getTime()
+      }
+    },
+    "60min": {
+      xaxis: {
+        type: "datetime",
+        tickAmount: 10,
+        min: new Date(Date.now()-40000000).getTime(),
+        max: new Date(Date.now()+10800000).getTime()
+      }
+    },
+    all: {
+      xaxis: {
+        type: "datetime",
+        tickAmount: 10,
+        min: undefined,
+        max: undefined
+      }
+    }
+  };
 
   public initChartData(num): void {
 
+    console.log(Date.now())
     let labelName="";
     labelName= num == 52 ? "XRP" : num == 74 ? "DOGE" : num == 1027 ? "ETH" : "";
     let dates =[];
     let prices=[];
     let trendPrices=[];
     let trendDates=[];
-    this.http.get("https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id="+num+"&range=7D").subscribe(result=>{
+    this.http.get("https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id="+num+"&range=1D").subscribe(result=>{
       console.log(result);
       this.coins=result;
       var keyNames = Object.keys(this.coins.data.points);
       var i = 1;
       keyNames.forEach(element => {
         // console.log(this.coins.data.points[element].v[0]);
-        if(i %5 == 0){
-          dates.push(Number(element)+607800);
+          dates.push(Number(element)*1000+10800000);
           prices.push(this.coins.data.points[element].v[0]);
-        };
-        i++;
       });
       this.trends=this.getTrendPoints(prices,dates);
 
       this.chartOptions = {
         series: [
           {
-            name: "series",
+            name: "$USD",
             data: prices
           }
         ],
@@ -101,11 +150,23 @@ public trendText:any;
         labels: dates,
         xaxis: {
           type: "datetime",
-        }
+          tickAmount: 6,
+          min: new Date(dates[0]).getTime(),
+          max:new Date(Date.now()+10800000).getTime()
+        },
+        tooltip: {
+          x: {
+            format: "dd MMM yyyy HH:mm"
+          }
+        },
       };
     })
   }
-
+  updateOptions(option: any): void {
+    this.activeOptionButton = option;
+    console.log(this.updateOptionsData[option].xaxis);
+    this.chartOptions.xaxis=this.updateOptionsData[option].xaxis;
+  }
   getTrendPoints(coinValues,coinDates){
     let pointAnotations:PointAnnotations[]=[];
     let i=0;
