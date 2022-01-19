@@ -214,15 +214,25 @@ export class CoreCompComponent {
     var priceValues = [];
     var dateValues = [];
     increamentValues.forEach(element => {
-      var dateItems = this.coinData.dateList[element.endIndex];
-      var priceItems = this.coinData.priceList[element.endIndex];
+      var dateItems = this.coinData.dateList[element.startIndex];
+      var priceItems = this.coinData.priceList[element.startIndex];
+      priceValues.push(priceItems);
+      dateValues.push(dateItems);
+
+      dateItems = this.coinData.dateList[element.endIndex];
+      priceItems = this.coinData.priceList[element.endIndex];
       priceValues.push(priceItems);
       dateValues.push(dateItems);
     });
 
     decreamentValues.forEach(element => {
-      var dateItems = this.coinData.dateList[element.endIndex];
-      var priceItems = this.coinData.priceList[element.endIndex];
+      var dateItems = this.coinData.dateList[element.startIndex];
+      var priceItems = this.coinData.priceList[element.startIndex];
+      priceValues.push(priceItems);
+      dateValues.push(dateItems);
+
+      dateItems = this.coinData.dateList[element.endIndex];
+      priceItems = this.coinData.priceList[element.endIndex];
       priceValues.push(priceItems);
       dateValues.push(dateItems);
     });
@@ -249,12 +259,10 @@ export class CoreCompComponent {
     this.increamentFiboList = this.checkFib(this.increamentList, this.increamentList.length, 1);
 
     var ignoredList = [];
-    for (let i = 0; i < 2; i++) {
-      this.increamentFiboMaxes.push(this.findMax(this.increamentFiboList, ignoredList));
-      this.increamentFiboMaxes.forEach(element => {
-        ignoredList.push(element.value)
-      });
-    }
+    this.increamentFiboMaxes.push(this.findMax(this.increamentFiboList, ignoredList));
+    this.increamentFiboMaxes.forEach(element => {
+      ignoredList.push(element.value)
+    });
     return this.increamentFiboMaxes;
   }
 
@@ -274,12 +282,10 @@ export class CoreCompComponent {
     this.decreamentFiboList = this.checkFib(this.decreamentList, this.decreamentList.length, 1);
 
     var ignoredList = [];
-    for (let i = 0; i < 2; i++) {
-      this.decreamentFiboMines.push(this.findMax(this.decreamentFiboList, ignoredList));
-      this.decreamentFiboMines.forEach(element => {
-        ignoredList.push(element.value)
-      });
-    }
+    this.decreamentFiboMines.push(this.findMax(this.decreamentFiboList, ignoredList));
+    this.decreamentFiboMines.forEach(element => {
+      ignoredList.push(element.value)
+    });
     return this.decreamentFiboMines;
   }
 
